@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'gestorUser',
 ]
 
+AUTH_USER_MODEL = 'gestorUser.GestorUser'
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
