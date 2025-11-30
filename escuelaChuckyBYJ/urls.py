@@ -15,17 +15,22 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
-from django.urls import include
-from . import views
+from django.urls import path, include
+from . import views   # para index
+from gestorUser import views as user_views  # vistas de gestorUser
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('gestorUser/', include('gestorUser.urls')),
-    path('login/', views.login_view, name='login'),
-    path('logout/', views.logout_view, name='logout'),
-    path('register/', views.register_view, name='register'),
-    path('perfil/', views.perfil_view, name='perfil'),
-    path('editar_perfil/', views.editar_perfil_view, name='editar_perfil'),
+    path('', views.index, name='index'),  # Página principal
 
+    # Rutas de usuarios (puedes dejarlas en raíz o solo incluir gestorUser.urls)
+    path('login/', user_views.login_view, name='login'),
+    path('logout/', user_views.logout_view, name='logout'),
+    path('register/', user_views.register_view, name='register'),
+    path('perfil/', user_views.perfil_view, name='perfil'),
+    path('editar-perfil/', user_views.editar_perfil_view, name='editar_perfil'),
+
+    # Opción más limpia: incluir todas las rutas de gestorUser
+    # path('usuarios/', include('gestorUser.urls')),
+    # path('cursos/', include('gestorCursos.urls')),
 ]
