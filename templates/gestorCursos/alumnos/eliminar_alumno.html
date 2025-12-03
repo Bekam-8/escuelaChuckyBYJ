@@ -1,0 +1,158 @@
+{% extends 'base.html' %}
+
+{% block title %}Eliminar Alumno - Escuela Chucky PB{% endblock %}
+{% block page_title %}Eliminar Alumno{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card shadow border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-exclamation-triangle"></i> Confirmar Eliminación
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-danger">
+                        <h5 class="alert-heading">
+                            <i class="fas fa-exclamation-circle"></i> ¡Atención!
+                        </h5>
+                        <p class="mb-0">
+                            Esta acción no se puede deshacer. Se eliminará permanentemente el registro del alumno.
+                        </p>
+                    </div>
+                    
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <div class="text-center mb-3">
+                                <i class="fas fa-user-graduate fa-4x text-danger"></i>
+                            </div>
+                            
+                            <h5 class="card-title text-center text-danger mb-4">
+                                Información del Alumno
+                            </h5>
+                            
+                            <hr>
+                            
+                            <div class="row mb-3">
+                                <div class="col-6">
+                                    <p class="mb-1"><strong>Nombre completo:</strong></p>
+                                </div>
+                                <div class="col-6">
+                                    <p class="mb-1 text-muted">{{ alumno.nombre_completo }}</p>
+                                </div>
+                            </div>
+                            
+                            <div class="row mb-3">
+                                <div class="col-6">
+                                    <p class="mb-1"><strong>Fecha de nacimiento:</strong></p>
+                                </div>
+                                <div class="col-6">
+                                    <p class="mb-1 text-muted">{{ alumno.fecha_nacimiento|date:"d/m/Y" }}</p>
+                                </div>
+                            </div>
+                            
+                            <div class="row mb-3">
+                                <div class="col-6">
+                                    <p class="mb-1"><strong>Edad:</strong></p>
+                                </div>
+                                <div class="col-6">
+                                    <p class="mb-1 text-muted">{{ alumno.edad }} años</p>
+                                </div>
+                            </div>
+                            
+                            <div class="row mb-3">
+                                <div class="col-6">
+                                    <p class="mb-1"><strong>Curso:</strong></p>
+                                </div>
+                                <div class="col-6">
+                                    <p class="mb-1">
+                                        <span class="badge bg-primary">{{ alumno.curso.codigo }}</span>
+                                        <br>
+                                        <small class="text-muted">{{ alumno.curso.nombre }}</small>
+                                    </p>
+                                </div>
+                            </div>
+                            
+                            {% if alumno.email %}
+                            <div class="row mb-3">
+                                <div class="col-6">
+                                    <p class="mb-1"><strong>Email:</strong></p>
+                                </div>
+                                <div class="col-6">
+                                    <p class="mb-1 text-muted">{{ alumno.email }}</p>
+                                </div>
+                            </div>
+                            {% endif %}
+                            
+                            {% if alumno.telefono %}
+                            <div class="row mb-3">
+                                <div class="col-6">
+                                    <p class="mb-1"><strong>Teléfono:</strong></p>
+                                </div>
+                                <div class="col-6">
+                                    <p class="mb-1 text-muted">{{ alumno.telefono }}</p>
+                                </div>
+                            </div>
+                            {% endif %}
+                            
+                            <hr>
+                            
+                            <div class="row">
+                                <div class="col-6">
+                                    <p class="mb-1"><strong>Registrado por:</strong></p>
+                                </div>
+                                <div class="col-6">
+                                    <p class="mb-1 text-muted">{{ alumno.creado_por.username }}</p>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-6">
+                                    <p class="mb-1"><strong>Fecha de registro:</strong></p>
+                                </div>
+                                <div class="col-6">
+                                    <p class="mb-1 text-muted">{{ alumno.fecha_registro|date:"d/m/Y H:i" }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="alert alert-warning">
+                        <p class="mb-0">
+                            <i class="fas fa-shield-alt"></i>
+                            <strong>Nota:</strong> Solo los administradores pueden eliminar alumnos.
+                        </p>
+                    </div>
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="d-grid gap-2">
+                            <p class="text-center text-muted mb-3">
+                                ¿Estás seguro de que deseas eliminar a este alumno?
+                            </p>
+                            
+                            <button type="submit" class="btn btn-danger btn-lg">
+                                <i class="fas fa-trash"></i> Sí, Eliminar Alumno
+                            </button>
+                            
+                            <a href="{% url 'lista_alumnos' %}" class="btn btn-secondary btn-lg">
+                                <i class="fas fa-times"></i> No, Cancelar
+                            </a>
+                        </div>
+                    </form>
+                </div>
+                
+                <div class="card-footer text-muted text-center">
+                    <small>
+                        <i class="fas fa-clock"></i>
+                        Esta acción es permanente e irreversible
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

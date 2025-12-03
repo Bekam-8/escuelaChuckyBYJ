@@ -1,0 +1,199 @@
+{% extends 'base.html' %}
+
+{% block title %}Detalle Alumno - {{ alumno.nombre_completo }}{% endblock %}
+{% block page_title %}Detalle del Alumno{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <!-- Breadcrumb -->
+            <nav aria-label="breadcrumb" class="mb-4">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'lista_alumnos' %}">Alumnos</a></li>
+                    <li class="breadcrumb-item active">{{ alumno.nombre_completo }}</li>
+                </ol>
+            </nav>
+            
+            <!-- Card Principal -->
+            <div class="card shadow mb-4">
+                <div class="card-header bg-primary text-white">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">
+                            <i class="fas fa-user-graduate"></i> Información del Alumno
+                        </h5>
+                        <div class="btn-group">
+                            <a href="{% url 'editar_alumno' alumno.pk %}" class="btn btn-sm btn-light">
+                                <i class="fas fa-edit"></i> Editar
+                            </a>
+                            {% if user.is_superuser %}
+                            <a href="{% url 'eliminar_alumno' alumno.pk %}" class="btn btn-sm btn-danger">
+                                <i class="fas fa-trash"></i> Eliminar
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-4">
+                        <div class="avatar-circle bg-primary text-white d-inline-flex align-items-center justify-content-center"
+                             style="width: 100px; height: 100px; border-radius: 50%; font-size: 2.5rem;">
+                            {{ alumno.nombre.0 }}{{ alumno.apellidos.0 }}
+                        </div>
+                        <h3 class="mt-3 mb-0">{{ alumno.nombre_completo }}</h3>
+                        <p class="text-muted">{{ alumno.edad }} años</p>
+                    </div>
+                    
+                    <hr>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <h6 class="text-primary">
+                                <i class="fas fa-id-card"></i> Datos Personales
+                            </h6>
+                            <table class="table table-sm">
+                                <tr>
+                                    <td class="fw-bold">Nombre:</td>
+                                    <td>{{ alumno.nombre }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold">Apellidos:</td>
+                                    <td>{{ alumno.apellidos }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold">Fecha de Nacimiento:</td>
+                                    <td>{{ alumno.fecha_nacimiento|date:"d/m/Y" }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold">Edad:</td>
+                                    <td>{{ alumno.edad }} años</td>
+                                </tr>
+                            </table>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <h6 class="text-success">
+                                <i class="fas fa-address-book"></i> Información de Contacto
+                            </h6>
+                            <table class="table table-sm">
+                                <tr>
+                                    <td class="fw-bold">Email:</td>
+                                    <td>
+                                        {% if alumno.email %}
+                                            <a href="mailto:{{ alumno.email }}">{{ alumno.email }}</a>
+                                        {% else %}
+                                            <span class="text-muted">No especificado</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold">Teléfono:</td>
+                                    <td>
+                                        {% if alumno.telefono %}
+                                            {{ alumno.telefono }}
+                                        {% else %}
+                                            <span class="text-muted">No especificado</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <hr>
+                    
+                    <div class="row">
+                        <div class="col-12">
+                            <h6 class="text-info">
+                                <i class="fas fa-book"></i> Información Académica
+                            </h6>
+                            <div class="card bg-light">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h5 class="mb-1">
+                                                <span class="badge bg-primary">{{ alumno.curso.codigo }}</span>
+                                                {{ alumno.curso.nombre }}
+                                            </h5>
+                                            <p class="mb-0 text-muted">{{ alumno.curso.descripcion }}</p>
+                                        </div>
+                                        <a href="{% url 'detalle_curso' alumno.curso.pk %}" class="btn btn-sm btn-info">
+                                            Ver Curso
+                                        </a>
+                                    </div>
+                                    <hr>
+                                    <div class="row mt-3">
+                                        <div class="col-md-4">
+                                            <small class="text-muted">Nivel:</small>
+                                            <p class="mb-0">{{ alumno.curso.nivel|default:"No especificado" }}</p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <small class="text-muted">Duración:</small>
+                                            <p class="mb-0">
+                                                {% if alumno.curso.duracion_horas %}
+                                                    {{ alumno.curso.duracion_horas }} horas
+                                                {% else %}
+                                                    No especificado
+                                                {% endif %}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Card de Sistema -->
+            <div class="card shadow">
+                <div class="card-header">
+                    <h6 class="mb-0">
+                        <i class="fas fa-info-circle"></i> Información del Sistema
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p class="mb-2">
+                                <strong>Registrado por:</strong>
+                                <span class="badge bg-secondary">{{ alumno.creado_por.username }}</span>
+                            </p>
+                            <p class="mb-2">
+                                <strong>Fecha de registro:</strong>
+                                {{ alumno.fecha_registro|date:"d/m/Y H:i" }}
+                            </p>
+                        </div>
+                        <div class="col-md-6">
+                            <p class="mb-2">
+                                <strong>Última actualización:</strong>
+                                {{ alumno.fecha_actualizacion|date:"d/m/Y H:i" }}
+                            </p>
+                            <p class="mb-2">
+                                <strong>ID del alumno:</strong>
+                                #{{ alumno.id }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Botones de Acción -->
+            <div class="d-flex gap-2 mt-4">
+                <a href="{% url 'lista_alumnos' %}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Volver a la lista
+                </a>
+                <a href="{% url 'editar_alumno' alumno.pk %}" class="btn btn-warning">
+                    <i class="fas fa-edit"></i> Editar
+                </a>
+                {% if user.is_superuser %}
+                <a href="{% url 'eliminar_alumno' alumno.pk %}" class="btn btn-danger ms-auto">
+                    <i class="fas fa-trash"></i> Eliminar
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

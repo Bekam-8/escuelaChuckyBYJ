@@ -1,10 +1,14 @@
-from django.contrib import admin
-from django.urls import path, include   # ✅ include se importa aquí
-from . import views                     # ✅ tus vistas del proyecto principal
+from django.urls import path
+from . import views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', views.index, name='index'),  # Página principal
-    path('usuarios/', include('gestorUser.urls')),   # Rutas de usuarios
-    path('cursos/', include('gestorCursos.urls')),   # Rutas de cursos
+    path('', views.index, name='index'),
+    path('login/', views.login_view, name='login'),
+    path('register/', views.register_view, name='register'),  # <-- ESTA
+    path('logout/', views.logout_view, name='logout'),
+    path('dashboard/', views.dashboard, name='dashboard'),
+    path('dashboard/admin/', views.dashboard_admin, name='dashboard_admin'),
+    path('dashboard/usuario/', views.dashboard_usuario, name='dashboard_usuario'),
+    path('perfil/', views.perfil, name='perfil'),
+    path('perfil/editar/', views.editar_perfil, name='editar_perfil'),
 ]

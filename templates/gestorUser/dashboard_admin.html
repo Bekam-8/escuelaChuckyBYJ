@@ -1,0 +1,222 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard Administrador - Escuela Chucky PB{% endblock %}
+{% block page_title %}Dashboard Administrador{% endblock %}
+
+{% block content %}
+<!-- Welcome Banner -->
+<div class="row">
+    <div class="col-12 grid-margin">
+        <div class="card">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h4 class="font-weight-bold mb-2">
+                            <i class="mdi mdi-shield-account text-primary"></i> 
+                            ¡Bienvenido, Administrador!
+                        </h4>
+                        <p class="text-muted mb-0">
+                            Tienes acceso completo al sistema de gestión de la Escuela Chucky PB
+                        </p>
+                    </div>
+                    <div class="col-md-4 text-right">
+                        <i class="mdi mdi-school" style="font-size: 4rem; color: #b66dff;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row">
+    <div class="col-md-4 stretch-card grid-margin">
+        <div class="card bg-gradient-primary card-img-holder text-white">
+            <div class="card-body">
+                <img src="/static/stellar/images/dashboard/circle.svg" class="card-img-absolute" alt="circle-image" />
+                <h4 class="font-weight-normal mb-3">
+                    <i class="mdi mdi-book-open-page-variant mdi-24px float-right"></i>
+                    Total Cursos
+                </h4>
+                <h2 class="mb-5">{{ total_cursos }}</h2>
+                <h6 class="card-text">Cursos registrados en el sistema</h6>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 stretch-card grid-margin">
+        <div class="card bg-gradient-success card-img-holder text-white">
+            <div class="card-body">
+                <img src="/static/stellar/images/dashboard/circle.svg" class="card-img-absolute" alt="circle-image" />
+                <h4 class="font-weight-normal mb-3">
+                    <i class="mdi mdi-account-multiple mdi-24px float-right"></i>
+                    Total Alumnos
+                </h4>
+                <h2 class="mb-5">{{ total_alumnos }}</h2>
+                <h6 class="card-text">Alumnos activos</h6>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 stretch-card grid-margin">
+        <div class="card bg-gradient-warning card-img-holder text-white">
+            <div class="card-body">
+                <img src="/static/stellar/images/dashboard/circle.svg" class="card-img-absolute" alt="circle-image" />
+                <h4 class="font-weight-normal mb-3">
+                    <i class="mdi mdi-account-group mdi-24px float-right"></i>
+                    Total Usuarios
+                </h4>
+                <h2 class="mb-5">{{ total_usuarios }}</h2>
+                <h6 class="card-text">Usuarios del sistema</h6>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Activity -->
+<div class="row">
+    <div class="col-lg-6 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">
+                    <i class="mdi mdi-book-open-page-variant text-primary"></i> 
+                    Cursos Recientes
+                </h4>
+                <p class="card-description">Últimos cursos creados</p>
+                
+                {% if cursos_recientes %}
+                <div class="list-wrapper">
+                    <ul class="list-unstyled">
+                        {% for curso in cursos_recientes %}
+                        <li class="mb-3 pb-3 border-bottom">
+                            <a href="{% url 'detalle_curso' curso.pk %}" class="d-block">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h6 class="mb-1">
+                                            <span class="badge badge-primary">{{ curso.codigo }}</span>
+                                            {{ curso.nombre }}
+                                        </h6>
+                                        <p class="text-muted small mb-1">
+                                            {{ curso.descripcion|truncatewords:15 }}
+                                        </p>
+                                        <small class="text-muted">
+                                            <i class="mdi mdi-account-multiple"></i> 
+                                            {{ curso.total_alumnos }} alumno(s)
+                                        </small>
+                                    </div>
+                                    <small class="text-muted">{{ curso.fecha_creacion|timesince }}</small>
+                                </div>
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% else %}
+                <div class="text-center py-4">
+                    <i class="mdi mdi-book-open-page-variant" style="font-size: 3rem; color: #ddd;"></i>
+                    <p class="text-muted mt-2">No hay cursos registrados</p>
+                </div>
+                {% endif %}
+                
+                <div class="text-center mt-3">
+                    <a href="{% url 'lista_cursos' %}" class="btn btn-primary btn-sm">
+                        Ver todos los cursos
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-6 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">
+                    <i class="mdi mdi-account-multiple text-success"></i> 
+                    Alumnos Recientes
+                </h4>
+                <p class="card-description">Últimos alumnos registrados</p>
+                
+                {% if alumnos_recientes %}
+                <div class="list-wrapper">
+                    <ul class="list-unstyled">
+                        {% for alumno in alumnos_recientes %}
+                        <li class="mb-3 pb-3 border-bottom">
+                            <a href="{% url 'detalle_alumno' alumno.pk %}" class="d-block">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h6 class="mb-1">
+                                            <i class="mdi mdi-account-circle text-success"></i>
+                                            {{ alumno.nombre_completo }}
+                                        </h6>
+                                        <p class="text-muted small mb-1">
+                                            <i class="mdi mdi-book-open-page-variant"></i> 
+                                            {{ alumno.curso.nombre }}
+                                        </p>
+                                        <small class="text-muted">
+                                            Registrado por: {{ alumno.creado_por.username }}
+                                        </small>
+                                    </div>
+                                    <span class="badge badge-success">Nuevo</span>
+                                </div>
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% else %}
+                <div class="text-center py-4">
+                    <i class="mdi mdi-account-multiple" style="font-size: 3rem; color: #ddd;"></i>
+                    <p class="text-muted mt-2">No hay alumnos registrados</p>
+                </div>
+                {% endif %}
+                
+                <div class="text-center mt-3">
+                    <a href="{% url 'lista_alumnos' %}" class="btn btn-success btn-sm">
+                        Ver todos los alumnos
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="row">
+    <div class="col-12 grid-margin">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title mb-4">
+                    <i class="mdi mdi-flash text-warning"></i> 
+                    Acciones Rápidas
+                </h4>
+                <div class="row text-center">
+                    <div class="col-md-3 mb-3">
+                        <a href="{% url 'crear_curso' %}" class="btn btn-lg btn-gradient-primary btn-icon-text w-100">
+                            <i class="mdi mdi-plus-circle btn-icon-prepend"></i>
+                            <div class="mt-2">Crear Curso</div>
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <a href="{% url 'crear_alumno' %}" class="btn btn-lg btn-gradient-success btn-icon-text w-100">
+                            <i class="mdi mdi-account-plus btn-icon-prepend"></i>
+                            <div class="mt-2">Registrar Alumno</div>
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <a href="{% url 'lista_cursos' %}" class="btn btn-lg btn-gradient-info btn-icon-text w-100">
+                            <i class="mdi mdi-view-list btn-icon-prepend"></i>
+                            <div class="mt-2">Ver Cursos</div>
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <a href="{% url 'admin:index' %}" class="btn btn-lg btn-gradient-warning btn-icon-text w-100" target="_blank">
+                            <i class="mdi mdi-settings btn-icon-prepend"></i>
+                            <div class="mt-2">Admin Django</div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

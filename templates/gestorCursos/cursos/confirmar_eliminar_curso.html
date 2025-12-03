@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+
+{% block title %}Eliminar Curso - Escuela Chucky PB{% endblock %}
+{% block page_title %}Eliminar Curso{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card shadow border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-exclamation-triangle"></i> Confirmar Eliminación
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-danger">
+                        <h5 class="alert-heading">
+                            <i class="fas fa-exclamation-circle"></i> ¡Atención!
+                        </h5>
+                        <p class="mb-0">
+                            Esta acción no se puede deshacer. Se eliminará permanentemente el curso y toda la información relacionada.
+                        </p>
+                    </div>
+                    
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title text-danger">
+                                <i class="fas fa-book"></i> Información del Curso
+                            </h5>
+                            <hr>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p><strong>Código:</strong></p>
+                                    <p class="text-muted">{{ curso.codigo }}</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p><strong>Nombre:</strong></p>
+                                    <p class="text-muted">{{ curso.nombre }}</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p><strong>Nivel:</strong></p>
+                                    <p class="text-muted">{{ curso.nivel|default:"No especificado" }}</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p><strong>Duración:</strong></p>
+                                    <p class="text-muted">
+                                        {% if curso.duracion_horas %}
+                                            {{ curso.duracion_horas }} horas
+                                        {% else %}
+                                            No especificado
+                                        {% endif %}
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="mb-2">
+                                <p><strong>Descripción:</strong></p>
+                                <p class="text-muted">{{ curso.descripcion }}</p>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p><strong>Creado por:</strong></p>
+                                    <p class="text-muted">{{ curso.creado_por.username }}</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p><strong>Fecha de creación:</strong></p>
+                                    <p class="text-muted">{{ curso.fecha_creacion|date:"d/m/Y" }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    {% if curso.total_alumnos > 0 %}
+                    <div class="alert alert-warning">
+                        <h6 class="alert-heading">
+                            <i class="fas fa-users"></i> Alumnos Asociados
+                        </h6>
+                        <p class="mb-0">
+                            Este curso tiene <strong>{{ curso.total_alumnos }}</strong> alumno(s) registrado(s).
+                            Al eliminar el curso, también se eliminarán todos los alumnos asociados.
+                        </p>
+                    </div>
+                    {% endif %}
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="d-grid gap-2">
+                            <p class="text-center text-muted mb-3">
+                                ¿Estás seguro de que deseas eliminar este curso?
+                            </p>
+                            
+                            <button type="submit" class="btn btn-danger btn-lg">
+                                <i class="fas fa-trash"></i> Sí, Eliminar Curso
+                            </button>
+                            
+                            <a href="{% url 'lista_cursos' %}" class="btn btn-secondary btn-lg">
+                                <i class="fas fa-times"></i> No, Cancelar
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

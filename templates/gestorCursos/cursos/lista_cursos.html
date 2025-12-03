@@ -1,0 +1,190 @@
+{% extends 'base.html' %}
+
+{% block title %}Gestión de Cursos - Escuela Chucky PB{% endblock %}
+{% block page_title %}Gestión de Cursos{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Header con botón de crear -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h3 class="mb-1" style="color: #2c3e50; font-weight: 700;">
+                <i class="fas fa-book me-2" style="color: #667eea;"></i>
+                Listado de Cursos
+            </h3>
+            <p class="text-muted mb-0">Administra todos los cursos disponibles</p>
+        </div>
+        <a href="{% url 'crear_curso' %}" class="btn btn-primary">
+            <i class="fas fa-plus-circle"></i> Nuevo Curso
+        </a>
+    </div>
+
+    <!-- Card con filtros y búsqueda -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label">Buscar</label>
+                    <input type="text" name="q" class="form-control" placeholder="Buscar por nombre..." value="{{ busqueda }}">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Nivel</label>
+                    <select name="nivel" class="form-select">
+                        <option value="">Todos los niveles</option>
+                        <option value="BASICA" {% if nivel_seleccionado == 'BASICA' %}selected{% endif %}>Educación Básica</option>
+                        <option value="MEDIA" {% if nivel_seleccionado == 'MEDIA' %}selected{% endif %}>Educación Media</option>
+                        <option value="SUPERIOR" {% if nivel_seleccionado == 'SUPERIOR' %}selected{% endif %}>Educación Superior</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Año</label>
+                    <input type="number" name="ano" class="form-control" placeholder="2024" value="{{ ano_seleccionado }}" min="2020" max="2030">
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-search"></i> Buscar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Card con la tabla de cursos -->
+    <div class="card shadow-sm">
+        <div class="card-header bg-white py-3">
+            <h6 class="mb-0 d-flex justify-content-between align-items-center">
+                <span>
+                    <i class="fas fa-list me-2"></i>
+                    Cursos Registrados
+                </span>
+                <span class="badge bg-primary">{{ cursos.count }} curso{{ cursos.count|pluralize }}</span>
+            </h6>
+        </div>
+        <div class="card-body p-0">
+            {% if cursos %}
+            <div class="table-responsive">
+                <table class="table table-hover table-striped mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th style="width: 60px;">#</th>
+                            <th>Nombre</th>
+                            <th style="width: 120px;">Código</th>
+                            <th style="width: 150px;">Nivel</th>
+                            <th style="width: 80px;">Año</th>
+                            <th style="width: 100px;" class="text-center">Alumnos</th>
+                            <th style="width: 120px;">Creado por</th>
+                            <th style="width: 150px;" class="text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for curso in cursos %}
+                        <tr>
+                            <td><strong class="text-primary">#{{ curso.id }}</strong></td>
+                            <td>
+                                <strong>{{ curso.nombre }}</strong>
+                                {% if curso.descripcion %}
+                                <br><small class="text-muted">{{ curso.descripcion|truncatewords:8 }}</small>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if curso.codigo %}
+                                <span class="badge bg-secondary">{{ curso.codigo }}</span>
+                                {% else %}
+                                <span class="text-muted">-</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if curso.nivel == 'BASICA' %}
+                                <span class="badge bg-success">{{ curso.get_nivel_display }}</span>
+                                {% elif curso.nivel == 'MEDIA' %}
+                                <span class="badge bg-info">{{ curso.get_nivel_display }}</span>
+                                {% elif curso.nivel == 'SUPERIOR' %}
+                                <span class="badge bg-warning">{{ curso.get_nivel_display }}</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ curso.ano|default:"-" }}</td>
+                            <td class="text-center">
+                                <span class="badge bg-primary">
+                                    {{ curso.num_alumnos|default:0 }}
+                                </span>
+                            </td>
+                            <td>
+                                <small class="text-muted">
+                                    <i class="fas fa-user"></i> {{ curso.creado_por.username }}
+                                </small>
+                            </td>
+                            <td class="text-center">
+                                <div class="btn-group btn-group-sm" role="group">
+                                    <a href="{% url 'detalle_curso' curso.pk %}" 
+                                       class="btn btn-outline-info" 
+                                       title="Ver detalles">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="{% url 'editar_curso' curso.pk %}" 
+                                       class="btn btn-outline-warning" 
+                                       title="Editar">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="{% url 'eliminar_curso' curso.pk %}" 
+                                       class="btn btn-outline-danger" 
+                                       title="Eliminar">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="text-center py-5">
+                <i class="fas fa-inbox fa-4x text-muted mb-3"></i>
+                <h5 class="text-muted">No hay cursos registrados</h5>
+                <p class="text-muted">Comienza creando tu primer curso</p>
+                <a href="{% url 'crear_curso' %}" class="btn btn-primary mt-3">
+                    <i class="fas fa-plus-circle"></i> Crear Curso
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+    .table thead th {
+        font-size: 0.85rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border-bottom: 2px solid #dee2e6;
+    }
+    
+    .table tbody tr {
+        transition: all 0.2s;
+    }
+    
+    .table tbody tr:hover {
+        background-color: #f8f9fa;
+        transform: scale(1.01);
+    }
+    
+    .btn-group-sm .btn {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.875rem;
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+$(document).ready(function() {
+    // Confirmación antes de eliminar
+    $('a[href*="eliminar"]').on('click', function(e) {
+        if (!confirm('¿Estás seguro de que deseas eliminar este curso?')) {
+            e.preventDefault();
+        }
+    });
+});
+</script>
+{% endblock %}

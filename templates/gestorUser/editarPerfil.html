@@ -1,0 +1,199 @@
+{% extends 'base.html' %}
+
+{% block title %}Editar Perfil - Escuela Chucky PB{% endblock %}
+{% block page_title %}Editar Mi Perfil{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-user-edit"></i> Editar Mi Perfil
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-4">
+                        <div class="avatar-circle bg-primary text-white d-inline-flex align-items-center justify-content-center"
+                             style="width: 100px; height: 100px; border-radius: 50%; font-size: 2.5rem;">
+                            {{ user.username.0|upper }}
+                        </div>
+                        <h4 class="mt-3">{{ user.username }}</h4>
+                        {% if user.is_superuser %}
+                        <span class="badge bg-danger">Administrador</span>
+                        {% else %}
+                        <span class="badge bg-primary">Usuario Normal</span>
+                        {% endif %}
+                    </div>
+                    
+                    <hr>
+                    
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="first_name" class="form-label">
+                                    <i class="fas fa-user"></i> Nombre
+                                </label>
+                                <input type="text" 
+                                       class="form-control" 
+                                       id="first_name" 
+                                       name="first_name" 
+                                       value="{{ user.first_name }}"
+                                       placeholder="Ingresa tu nombre">
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="last_name" class="form-label">
+                                    <i class="fas fa-user"></i> Apellido
+                                </label>
+                                <input type="text" 
+                                       class="form-control" 
+                                       id="last_name" 
+                                       name="last_name" 
+                                       value="{{ user.last_name }}"
+                                       placeholder="Ingresa tu apellido">
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="email" class="form-label">
+                                <i class="fas fa-envelope"></i> Correo Electrónico
+                            </label>
+                            <input type="email" 
+                                   class="form-control" 
+                                   id="email" 
+                                   name="email" 
+                                   value="{{ user.email }}"
+                                   placeholder="correo@ejemplo.com">
+                            <small class="form-text text-muted">
+                                Tu correo electrónico de contacto
+                            </small>
+                        </div>
+                        
+                        <div class="alert alert-info">
+                            <h6 class="alert-heading">
+                                <i class="fas fa-info-circle"></i> Información
+                            </h6>
+                            <ul class="mb-0">
+                                <li>Tu nombre de usuario no se puede cambiar: <strong>{{ user.username }}</strong></li>
+                                <li>Para cambiar tu contraseña, contacta al administrador</li>
+                            </ul>
+                        </div>
+                        
+                        <hr>
+                        
+                        <h6 class="mb-3">
+                            <i class="fas fa-chart-bar"></i> Estadísticas
+                        </h6>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="card bg-light">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <h6 class="text-muted mb-0">Cursos Creados</h6>
+                                                <h3 class="mb-0">{{ mis_cursos }}</h3>
+                                            </div>
+                                            <i class="fas fa-book fa-2x text-primary"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="card bg-light">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <h6 class="text-muted mb-0">Alumnos Registrados</h6>
+                                                <h3 class="mb-0">{{ mis_alumnos }}</h3>
+                                            </div>
+                                            <i class="fas fa-users fa-2x text-success"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <hr>
+                        
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'perfil' %}" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Guardar Cambios
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Información de la cuenta -->
+            <div class="card shadow mt-4">
+                <div class="card-header bg-info text-white">
+                    <h6 class="mb-0">
+                        <i class="fas fa-clock"></i> Información de la Cuenta
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p class="mb-2">
+                                <strong>Cuenta creada:</strong><br>
+                                {{ user.date_joined|date:"d/m/Y H:i" }}
+                            </p>
+                        </div>
+                        <div class="col-md-6">
+                            <p class="mb-2">
+                                <strong>Último acceso:</strong><br>
+                                {{ user.last_login|date:"d/m/Y H:i" }}
+                            </p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p class="mb-0">
+                                <strong>ID de usuario:</strong> #{{ user.id }}
+                            </p>
+                        </div>
+                        <div class="col-md-6">
+                            <p class="mb-0">
+                                <strong>Estado:</strong> 
+                                {% if user.is_active %}
+                                    <span class="badge bg-success">Activo</span>
+                                {% else %}
+                                    <span class="badge bg-danger">Inactivo</span>
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Cambiar contraseña -->
+            <div class="card shadow mt-4 border-warning">
+                <div class="card-header bg-warning">
+                    <h6 class="mb-0">
+                        <i class="fas fa-key"></i> Cambiar Contraseña
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted mb-3">
+                        Por razones de seguridad, el cambio de contraseña debe ser solicitado al administrador del sistema.
+                    </p>
+                    <a href="mailto:admin@escuelachucky.cl?subject=Solicitud de cambio de contraseña" 
+                       class="btn btn-warning">
+                        <i class="fas fa-envelope"></i> Solicitar Cambio de Contraseña
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

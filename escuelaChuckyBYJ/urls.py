@@ -16,21 +16,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from . import views   # para index
-from gestorUser import views as user_views  # vistas de gestorUser
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.index, name='index'),  # Página principal
-
-    # Rutas de usuarios (puedes dejarlas en raíz o solo incluir gestorUser.urls)
-    path('login/', user_views.login_view, name='login'),
-    path('logout/', user_views.logout_view, name='logout'),
-    path('register/', user_views.register_view, name='register'),
-    path('perfil/', user_views.perfil_view, name='perfil'),
-    path('editar-perfil/', user_views.editar_perfil_view, name='editar_perfil'),
-
-    # Opción más limpia: incluir todas las rutas de gestorUser
-    # path('usuarios/', include('gestorUser.urls')),
-    # path('cursos/', include('gestorCursos.urls')),
+    path('', include('gestorUser.urls')),
+    path('gestion/', include('gestorCursos.urls')),
 ]
+
+admin.site.site_header = "Escuela Chucky PB - Administración"
+admin.site.site_title = "Escuela Chucky PB"
+admin.site.index_title = "Panel de Administración"
+

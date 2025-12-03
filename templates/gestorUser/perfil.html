@@ -1,0 +1,263 @@
+{% extends 'base.html' %}
+
+{% block title %}Mi Perfil - Escuela Chucky PB{% endblock %}
+{% block page_title %}Mi Perfil{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-lg-10 mx-auto">
+            <!-- Perfil Card -->
+            <div class="card shadow mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-user-circle"></i> Información del Perfil
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3 text-center">
+                            <div class="avatar-circle bg-primary text-white d-inline-flex align-items-center justify-content-center mb-3"
+                                 style="width: 120px; height: 120px; border-radius: 50%; font-size: 3rem;">
+                                {{ user.username.0|upper }}
+                            </div>
+                            <h4>{{ user.username }}</h4>
+                            {% if user.is_superuser %}
+                            <span class="badge bg-danger">Administrador</span>
+                            {% else %}
+                            <span class="badge bg-primary">Usuario Normal</span>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-md-9">
+                            <h5 class="mb-3">Datos Personales</h5>
+                            <table class="table table-borderless">
+                                <tr>
+                                    <td class="fw-bold" style="width: 200px;">
+                                        <i class="fas fa-user"></i> Usuario:
+                                    </td>
+                                    <td>{{ user.username }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold">
+                                        <i class="fas fa-signature"></i> Nombre completo:
+                                    </td>
+                                    <td>
+                                        {% if user.first_name or user.last_name %}
+                                            {{ user.get_full_name }}
+                                        {% else %}
+                                            <span class="text-muted">No especificado</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold">
+                                        <i class="fas fa-envelope"></i> Email:
+                                    </td>
+                                    <td>
+                                        {% if user.email %}
+                                            {{ user.email }}
+                                        {% else %}
+                                            <span class="text-muted">No especificado</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold">
+                                        <i class="fas fa-calendar-alt"></i> Fecha de registro:
+                                    </td>
+                                    <td>{{ user.date_joined|date:"d/m/Y H:i" }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold">
+                                        <i class="fas fa-clock"></i> Último acceso:
+                                    </td>
+                                    <td>{{ user.last_login|date:"d/m/Y H:i" }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Estadísticas -->
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <div class="card shadow h-100">
+                        <div class="card-header bg-success text-white">
+                            <h6 class="mb-0">
+                                <i class="fas fa-chart-bar"></i> Mis Estadísticas
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-3 pb-3 border-bottom">
+                                <div>
+                                    <i class="fas fa-book fa-2x text-primary"></i>
+                                </div>
+                                <div class="text-end">
+                                    <h6 class="text-muted mb-0">Cursos Creados</h6>
+                                    <h3 class="mb-0">{{ mis_cursos.count }}</h3>
+                                </div>
+                            </div>
+                            
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <i class="fas fa-users fa-2x text-success"></i>
+                                </div>
+                                <div class="text-end">
+                                    <h6 class="text-muted mb-0">Alumnos Registrados</h6>
+                                    <h3 class="mb-0">{{ mis_alumnos.count }}</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="card shadow h-100">
+                        <div class="card-header bg-info text-white">
+                            <h6 class="mb-0">
+                                <i class="fas fa-shield-alt"></i> Permisos del Usuario
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            {% if user.is_superuser %}
+                            <div class="alert alert-danger mb-0">
+                                <h6 class="alert-heading">
+                                    <i class="fas fa-crown"></i> Administrador
+                                </h6>
+                                <ul class="mb-0">
+                                    <li>Acceso completo al sistema</li>
+                                    <li>Gestión de cursos</li>
+                                    <li>Gestión completa de alumnos</li>
+                                    <li>Panel de administración</li>
+                                </ul>
+                            </div>
+                            {% else %}
+                            <div class="alert alert-primary mb-0">
+                                <h6 class="alert-heading">
+                                    <i class="fas fa-user"></i> Usuario Normal
+                                </h6>
+                                <p class="mb-2"><strong>Puedes:</strong></p>
+                                <ul class="mb-2">
+                                    <li>Crear y editar alumnos</li>
+                                    <li>Ver tus alumnos</li>
+                                    <li>Gestionar tu perfil</li>
+                                </ul>
+                                <p class="mb-2"><strong>No puedes:</strong></p>
+                                <ul class="mb-0">
+                                    <li>Eliminar alumnos</li>
+                                    <li>Gestionar cursos</li>
+                                </ul>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Mis Cursos -->
+            {% if mis_cursos %}
+            <div class="card shadow mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h6 class="mb-0">
+                        <i class="fas fa-book"></i> Mis Cursos
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        {% for curso in mis_cursos %}
+                        <div class="col-md-6 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        <span class="badge bg-primary">{{ curso.codigo }}</span>
+                                        {{ curso.nombre }}
+                                    </h5>
+                                    <p class="card-text text-muted">{{ curso.descripcion|truncatewords:15 }}</p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <small class="text-muted">
+                                            <i class="fas fa-users"></i> {{ curso.total_alumnos }} alumno(s)
+                                        </small>
+                                        <a href="{% url 'detalle_curso' curso.pk %}" class="btn btn-sm btn-primary">
+                                            Ver detalle
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            
+            <!-- Mis Alumnos Recientes -->
+            {% if mis_alumnos %}
+            <div class="card shadow">
+                <div class="card-header bg-success text-white">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h6 class="mb-0">
+                            <i class="fas fa-users"></i> Mis Alumnos Recientes
+                        </h6>
+                        <a href="{% url 'lista_alumnos' %}" class="btn btn-sm btn-light">
+                            Ver todos
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Curso</th>
+                                    <th>Edad</th>
+                                    <th>Registrado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for alumno in mis_alumnos|slice:":5" %}
+                                <tr>
+                                    <td>
+                                        <i class="fas fa-user-graduate text-primary"></i>
+                                        {{ alumno.nombre_completo }}
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-info">{{ alumno.curso.codigo }}</span>
+                                    </td>
+                                    <td>{{ alumno.edad }} años</td>
+                                    <td>
+                                        <small class="text-muted">{{ alumno.fecha_registro|timesince }} ago</small>
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'detalle_alumno' alumno.pk %}" class="btn btn-sm btn-info">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a href="{% url 'editar_alumno' alumno.pk %}" class="btn btn-sm btn-warning">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            
+            <!-- Botones de Acción -->
+            <div class="d-flex gap-2 mt-4">
+                <a href="{% url 'dashboard' %}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Volver al Dashboard
+                </a>
+                <a href="{% url 'crear_alumno' %}" class="btn btn-success">
+                    <i class="fas fa-user-plus"></i> Registrar Alumno
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

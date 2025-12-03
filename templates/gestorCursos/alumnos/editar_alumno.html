@@ -1,0 +1,241 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Editar Alumno - Escuela Chucky PB{% endblock %}
+
+{% block page_title %}
+    <i class="mdi mdi-account-edit"></i> Editar Alumno
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title mb-4">
+                    <i class="mdi mdi-account-edit text-primary"></i> 
+                    Editar Información del Alumno
+                </h4>
+                
+                <form method="post" class="forms-sample">
+                    {% csrf_token %}
+                    
+                    <div class="row">
+                        <!-- Nombre -->
+                        <div class="col-md-6 mb-3">
+                            <label for="id_nombre" class="form-label">
+                                Nombre <span class="text-danger">*</span>
+                            </label>
+                            {{ form.nombre }}
+                        </div>
+                        
+                        <!-- Apellido -->
+                        <div class="col-md-6 mb-3">
+                            <label for="id_apellido" class="form-label">
+                                Apellido <span class="text-danger">*</span>
+                            </label>
+                            {{ form.apellido }}
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <!-- RUT -->
+                        <div class="col-md-6 mb-3">
+                            <label for="id_rut" class="form-label">
+                                RUT <span class="text-danger">*</span>
+                            </label>
+                            {{ form.rut }}
+                            <small class="form-text text-muted">
+                                Formato: XX.XXX.XXX-X
+                            </small>
+                        </div>
+                        
+                        <!-- Fecha de Nacimiento -->
+                        <div class="col-md-6 mb-3">
+                            <label for="id_fecha_nacimiento" class="form-label">
+                                Fecha de Nacimiento <span class="text-danger">*</span>
+                            </label>
+                            {{ form.fecha_nacimiento }}
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <!-- Email -->
+                        <div class="col-md-6 mb-3">
+                            <label for="id_email" class="form-label">
+                                Email
+                            </label>
+                            {{ form.email }}
+                        </div>
+                        
+                        <!-- Teléfono -->
+                        <div class="col-md-6 mb-3">
+                            <label for="id_telefono" class="form-label">
+                                Teléfono
+                            </label>
+                            {{ form.telefono }}
+                        </div>
+                    </div>
+                    
+                    <!-- Curso -->
+                    <div class="mb-4">
+                        <label for="id_curso" class="form-label">
+                            Curso <span class="text-danger">*</span>
+                        </label>
+                        {{ form.curso }}
+                    </div>
+                    
+                    <hr class="my-4">
+                    
+                    <!-- Botones de acción -->
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'lista_alumnos' %}" class="btn btn-light">
+                            <i class="mdi mdi-arrow-left"></i> Cancelar
+                        </a>
+                        
+                        <div>
+                            <button type="submit" class="btn btn-gradient-primary me-2">
+                                <i class="mdi mdi-content-save"></i> Guardar Cambios
+                            </button>
+                            <a href="{% url 'detalle_alumno' alumno.pk %}" 
+                               class="btn btn-gradient-info">
+                                <i class="mdi mdi-eye"></i> Ver Detalle
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Información adicional -->
+<div class="row mt-3">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="mdi mdi-information text-info"></i> 
+                    Información del Sistema
+                </h5>
+                <ul class="list-unstyled mb-0">
+                    <li class="mb-2">
+                        <strong>ID:</strong> {{ alumno.id }}
+                    </li>
+                    <li class="mb-2">
+                        <strong>Creado por:</strong> 
+                        {{ alumno.creado_por.get_full_name|default:alumno.creado_por.username }}
+                    </li>
+                    <li class="mb-2">
+                        <strong>Curso Actual:</strong> 
+                        <span class="badge bg-primary">
+                            {{ alumno.curso.nombre }}
+                        </span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card bg-gradient-info text-white">
+            <div class="card-body">
+                <h5 class="card-title text-white">
+                    <i class="mdi mdi-lightbulb"></i> 
+                    Consejos
+                </h5>
+                <ul class="mb-0">
+                    <li>Verifica que el RUT esté en el formato correcto</li>
+                    <li>La fecha de nacimiento debe ser válida</li>
+                    <li>El email es opcional pero recomendado</li>
+                    <li>Puedes cambiar el curso del alumno si es necesario</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Estilos para los campos del formulario */
+    #id_nombre,
+    #id_apellido,
+    #id_rut,
+    #id_email,
+    #id_telefono {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #d1d3e2;
+        border-radius: 0.35rem;
+        font-size: 1rem;
+    }
+    
+    #id_fecha_nacimiento {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #d1d3e2;
+        border-radius: 0.35rem;
+        font-size: 1rem;
+    }
+    
+    #id_curso {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #d1d3e2;
+        border-radius: 0.35rem;
+        font-size: 1rem;
+        background-color: white;
+    }
+    
+    .form-control:focus,
+    #id_curso:focus {
+        border-color: #4e73df;
+        box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
+        outline: 0;
+    }
+    
+    .errorlist {
+        list-style: none;
+        padding: 0;
+        margin: 0.25rem 0 0 0;
+        color: #e74a3b;
+        font-size: 0.875rem;
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Formatear RUT automáticamente
+    const rutInput = document.getElementById('id_rut');
+    if (rutInput) {
+        rutInput.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\./g, '').replace(/-/g, '');
+            
+            if (value.length > 1) {
+                let rut = value.slice(0, -1);
+                let dv = value.slice(-1);
+                
+                // Formatear con puntos
+                rut = rut.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+                e.target.value = rut + '-' + dv;
+            }
+        });
+    }
+    
+    // Validación del formulario
+    document.querySelector('form').addEventListener('submit', function(e) {
+        const nombre = document.getElementById('id_nombre').value.trim();
+        const apellido = document.getElementById('id_apellido').value.trim();
+        const rut = document.getElementById('id_rut').value.trim();
+        const curso = document.getElementById('id_curso').value;
+        
+        if (!nombre || !apellido || !rut || !curso) {
+            e.preventDefault();
+            alert('Por favor, complete todos los campos obligatorios.');
+            return false;
+        }
+    });
+</script>
+{% endblock %}

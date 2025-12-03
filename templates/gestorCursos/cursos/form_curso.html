@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ form.instance.pk|yesno:"Editar Curso,Crear Curso" }}{% endblock %}
+
+{% block content %}
+<div class="pt-3 pb-2 mb-3 border-bottom">
+    <h2>
+        <i class="fas fa-book"></i>
+        {% if form.instance.pk %}Editar Curso{% else %}Crear Curso{% endif %}
+    </h2>
+</div>
+
+<div class="card shadow">
+    <div class="card-header">
+        <i class="fas fa-pen"></i> Datos del Curso
+    </div>
+    <div class="card-body">
+        <!-- Mostrar errores generales -->
+        {% if form.non_field_errors %}
+            <div class="alert alert-danger">
+                {{ form.non_field_errors }}
+            </div>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+            
+            <!-- Solo Nombre del Curso -->
+            <div class="mb-3">
+                <label class="form-label">Nombre del Curso <span class="text-danger">*</span></label>
+                {{ form.nombre }}
+                {% if form.nombre.errors %}
+                    <div class="text-danger small mt-1">
+                        {{ form.nombre.errors }}
+                    </div>
+                {% endif %}
+                <small class="form-text text-muted">Ejemplo: 1° Medio A, 2° Básico B, Kínder</small>
+            </div>
+
+            <!-- Botones -->
+            <div class="mt-4">
+                <button class="btn btn-success" type="submit">
+                    <i class="fas fa-save"></i> Guardar
+                </button>
+
+                <a href="{% url 'lista_cursos' %}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Volver
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
